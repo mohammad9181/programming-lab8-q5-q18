@@ -49,11 +49,24 @@ public class Game
         office = new Room("in the computing admin office");
         
         // initialise room exits
-        outside.setExits(null, theater, lab, pub);
-        theater.setExits(null, null, null, outside);
-        pub.setExits(null, outside, null, null);
-        lab.setExits(outside, office, null, null);
-        office.setExits(null, null, null, lab);
+        
+        /**
+         * Replacing it so that it uses the new HashMap we created. We're adding each
+         * room with a key which replresents the direction.
+         */
+        
+        outside.setExits("east", theater);
+        outside.setExits("south", lab);
+        outside.setExits("west", pub);
+        
+        theater.setExits("west", outside);
+
+        pub.setExits("east", outside);
+        
+        lab.setExits("north", outside);
+        lab.setExits("east", office);
+        
+        office.setExits("west", lab);
 
         // start game outside
         currentRoom = outside;  
@@ -90,6 +103,7 @@ public class Game
         System.out.println("You are " + currentRoom.getDescription());
         System.out.print("Exits: ");
         
+        //Replacing the 4 if statements with this method call.
         printLocationInfo();
         
         System.out.println();
@@ -155,6 +169,7 @@ public class Game
 
         // Try to leave current room.
         Room nextRoom = currentRoom.getExit(direction);
+        
         printLocationInfo();
 
         if (nextRoom == null) {
@@ -188,6 +203,12 @@ public class Game
         }
     }
     
+    /**
+     * Originally, we did this method in question 5 to optimize the code by replacing
+     * 4 if statements in printWelcome and goRoom with a call to this method.
+     * 
+     * Now, we migrated the code that allows that to Room class. 
+     */
     public void printLocationInfo() {
         System.out.println(currentRoom.getExitString());
     }
