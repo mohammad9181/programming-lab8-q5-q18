@@ -20,10 +20,6 @@ public class Game
     private Room currentRoom;
     
     private String description;
-    private Room northExit;
-    private Room southExit;
-    private Room eastExit;
-    private Room westExit;
     
     /**
      * Create the game and initialise its internal map.
@@ -39,7 +35,7 @@ public class Game
      */
     private void createRooms()
     {
-        Room outside, theater, pub, lab, office;
+        Room outside, theater, pub, lab, office, english, french;
       
         // create the rooms
         outside = new Room("outside the main entrance of the university");
@@ -47,26 +43,37 @@ public class Game
         pub = new Room("in the campus pub");
         lab = new Room("in a computing lab");
         office = new Room("in the computing admin office");
+        english = new Room("You're now inside english class");
+        french = new Room("You're now in in the french class");
         
         // initialise room exits
         
         /**
-         * Replacing it so that it uses the new HashMap we created. We're adding each
-         * room with a key which replresents the direction.
+         * Replacing it so that it uses the new HashMap we created. 
+         * We're adding each room with a key which replresents the
+         * direction.
          */
         
-        outside.setExits("east", theater);
-        outside.setExits("south", lab);
-        outside.setExits("west", pub);
+        outside.setExit("east", theater);
+        outside.setExit("south", lab);
+        outside.setExit("west", pub);
         
-        theater.setExits("west", outside);
+        theater.setExit("west", outside);
 
-        pub.setExits("east", outside);
+        pub.setExit("east", outside);
         
-        lab.setExits("north", outside);
-        lab.setExits("east", office);
+        lab.setExit("north", outside);
+        lab.setExit("east", office);
         
-        office.setExits("west", lab);
+        office.setExit("west", lab);
+        office.setExit("up", english);
+        office.setExit("down", french);
+        
+        english.setExit("west", french);
+        french.setExit("east", english);
+        
+        english.setExit("down", office);
+        french.setExit("down", office);
 
         // start game outside
         currentRoom = outside;  
@@ -101,12 +108,7 @@ public class Game
         System.out.println("Type 'help' if you need help.");
         System.out.println();
         System.out.println("You are " + currentRoom.getDescription());
-        System.out.print("Exits: ");
         
-        //Replacing the 4 if statements with this method call.
-        printLocationInfo();
-        
-        System.out.println();
     }
 
     /**
@@ -169,8 +171,6 @@ public class Game
 
         // Try to leave current room.
         Room nextRoom = currentRoom.getExit(direction);
-        
-        printLocationInfo();
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
@@ -178,9 +178,6 @@ public class Game
         else {
             currentRoom = nextRoom;
             System.out.println("You are " + currentRoom.getDescription());
-            System.out.print("Exits: ");
-            
-            printLocationInfo();
             
             System.out.println();
         }
@@ -210,6 +207,7 @@ public class Game
      * Now, we migrated the code that allows that to Room class. 
      */
     public void printLocationInfo() {
-        System.out.println(currentRoom.getExitString());
+        //this is no longer needed as getExitString() is already called
+        //System.out.println(currentRoom.getExitString());
     }
 }
