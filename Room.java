@@ -56,6 +56,11 @@ public class Room
         return description + ".\n" + getExitString();
     }
     
+    public String getLongDescription()
+    {
+        return "You are " + description + ".\n" + getExitString();
+    }
+    
     
         /** * Return a description of the room’s exits,
     * for example, "Exits: north west".
